@@ -59,7 +59,25 @@
             - insert / update 쿼리. id가 있다면 update, id가 없다면 update
         - ```findAll()```
             - entity에 있는 모든 데이터를 조회해오는 메서드 
-    
+
+#### API를 만들기 위한 총 3개의 클래스
+
+![image](https://user-images.githubusercontent.com/52440668/89849264-1bd0dd00-dbc3-11ea-9188-5dc848bc07ae.png)
+- Web Layer
+    - 컨트롤러와 JSP/Freemarker 등의 뷰 템플릿 영역입니다.
+    - 이외에도 필터, 인터셉터, 컨트롤러 어드바이스 등 외부 요청과 응답에 대한 전반적인 영역을 이야기합니다.
+- Service Layer
+    - ```@Service```나 ```@Transactional```에 사용되는 서비스 영역입니다.
+    - 일반적으로 컨트롤러와 Dao의 중간 영역입니다.
+    - __트랜잭션, 도메인 간 순서 보장의 역할만__
+- Repository Layer
+    - DB와 같이 데이터 저장소에 접근하는 영역입니다.
+- Dto
+    - 계층 간에 데이터 교환을 위한 객체
+- Domain Model
+    - 도메인을 모두가 쉽게 이해할 수 있도록 단순화 시킨 것을 도메인 모델이라고 합니다.
+    - __비즈니스 로직을 처리__
+
 #### Annotation
 
 - ```@SpringBootApplication```
@@ -71,12 +89,13 @@
 - ```@Autowired```
     - 스프링이 관리하는 빈을 주입 받습니다.
 - ```@RequestParam```
-    - 외부에서 API로 넘긴 파라미터를 가져오는 어노테이션
+    - 외부에서 API로 넘긴 파라미터를 가져오는 애노테이션
     - [사용 예시](https://github.com/96glory/glory-springboot-webservice/blob/master/src/main/java/me/glory/springboot/web/HelloController.java)
 - Test
     - ```@WebMvcTest```
         - 여러 스프링 테스트 애노테이션 중, Web MVC에 집중할 수 있는 애노테이션
         - ```@Controller```, ```@ControllerAdvice``` 등을 사용할 수 있지만, ```@Service```, ```@Component```, ```@Repository``` 등을 사용할 수 없습니다.
+        - JPA test가 불가능하므로 ```@SpringBootTest```와 RestTemplate로 대체할 수 있다.
     - ```@After```
         - Junit의 단위 테스트가 끝날 때마다 수행되는 세더르를 지정
         - 보통 배포 전 전체 테스트를 수행할 때 테스트 간 데이터 침범을 막기 위해 사용합니다.
