@@ -27,7 +27,21 @@
 
 - TDD : 테스트가 주도하는 개발
     - TDD에 대한 자세한 이야기 : [링크](https://repo.yona.io/doortts/blog/issue/1)
-
+- Test Code Function
+    - ```MockMvc mockMvc;```
+        - 웹 API를 테스트할 때 사용합니다.
+        - 이 클래스를 통해 HTTP GET, POST 등에 대한 API 테스트를 할 수 있습니다.
+    - ```mockMvc.perform(get("/hello"))```
+        - ```MockMvc```를 통해 /hello 주소로 HTTP GET 요청을 합니다.
+    - ```.andExpect(status().isOk())```
+        - ```mockMvc.perform```의 결과에서 나오는 __HTTP Header의 Status__ 를 검증합니다.
+        - ```isOk()```이므로 200인지 아닌지를 확인합니다.
+    - ```.andExpect(content().string(hello))```
+        - ```mockMvc.perform```의 결과에서 나오는 __응답 본문의 내용__ 을 검증합니다.
+    - ```.andExpect(jsonPath("$.name").isEqualTo("glory"))```
+        - JSON 응답값을 필드별로 검증할 수 있는 메서드입니다.
+        - $를 기준으로 필드명을 명시합니다.
+        
 #### JPA : 관계형 DB와 객체지향 프로그래밍 사이에서
 
 - 패러다임 불일치
@@ -37,27 +51,66 @@
     - 서로 지향하는 바가 다른 2개 영역을 중간에서 패러다임 일치를 시켜주기 위한 기술
     - 구현체 교체의 용이성 : Hibernate 외에 다른 구현체로 쉽게 교체하기 위함 (Jedis에서 Lettuce, ...)
     - 저장소 교체의 용이성 : 관계형 DB 외에 다른 저장소로 쉽게 교체하기 위함 (MongoDB로의 교체, Redis로의 교체, ...)
-
+    - ```extends JpaRepository<Entity 클래스, PK 타입> ```
+        - 기본적인 CRUD 메서드가 자동으로 생성됩니다.
+        - Entity 클래스와 EntityRepository가 같은 위치에 있다면, ```@Repository```를 선언할 필요가 없다.
+    - EntityRepository의 함수
+        - ```save(Entity entity)```
+            - insert / update 쿼리. id가 있다면 update, id가 없다면 update
+        - ```findAll()```
+            - entity에 있는 모든 데이터를 조회해오는 메서드 
+    
 #### Annotation
 
-- @SpringBootApplication
+- ```@SpringBootApplication```
     - 스프링 부트의 자동 설정, 스프링 빈 읽기와 생성을 모두 자동으로 설정됩니다.
-    - @SpringBootApplication이 있는 위치부터 설정을 읽어가기 때문에 이 애노테이션을 포함한 클래스는 항상 프로젝트의 최상단에 위치해야만 합니다.
-- @RestController
+    - ```@SpringBootApplication```이 있는 위치부터 설정을 읽어가기 때문에 이 애노테이션을 포함한 클래스는 항상 프로젝트의 최상단에 위치해야만 합니다.
+- ```@RestController```
     - 컨트롤러를 JSON으로 반환하는 컨트롤러를 만들어줍니다.
-    - 클래스 내에 있는 모든 메소드에 @ResponseBody를 얹어준 효과와 같습니다.
-- @Autowired
+    - 클래스 내에 있는 모든 메소드에 ```@ResponseBody```를 얹어준 효과와 같습니다.
+- ```@Autowired```
     - 스프링이 관리하는 빈을 주입 받습니다.
-- @RequestParam
+- ```@RequestParam```
     - 외부에서 API로 넘긴 파라미터를 가져오는 어노테이션
     - [사용 예시](https://github.com/96glory/glory-springboot-webservice/blob/master/src/main/java/me/glory/springboot/web/HelloController.java)
 - Test
-    - @WebMvcTest
+    - ```@WebMvcTest```
         - 여러 스프링 테스트 애노테이션 중, Web MVC에 집중할 수 있는 애노테이션
-        - @Controller, @ControllerAdvice 등을 사용할 수 있지만, @Service, @Component, @Repository 등을 사용할 수 없습니다.
+        - ```@Controller```, ```@ControllerAdvice``` 등을 사용할 수 있지만, ```@Service```, ```@Component```, ```@Repository``` 등을 사용할 수 없습니다.
+    - ```@After```
+        - Junit의 단위 테스트가 끝날 때마다 수행되는 세더르를 지정
+        - 보통 배포 전 전체 테스트를 수행할 때 테스트 간 데이터 침범을 막기 위해 사용합니다.
 - Lombok
-    - @Getter
+    - ```@Getter```
         - 선언된 모든 필드의 get 메소드를 생성해 줍니다.
-    - @RequiredArgsConstructor
+    - ```@RequiredArgsConstructor```
         - 선언된 모든 final 필드가 포함된 생성자를 생성해 줍니다.
         - final이 없는 필드는 생성자에 포함되지 않습니다.
+    - ```@NoArgsConstructor```
+        - 기본 생성자 자동 추가
+        - ```public Posts() {}``` 와 같은 효과.
+    - ```@Builder```
+        - 해당 클래스의 빌더 패턴 클래스를 생성
+        - 생성자 상단에 선언 시 생성자에 포함된 필드만 빌더에 포함
+- JPA
+    - ```@Entity```
+        - 테이블과 링크될 클래스임을 나타냅니다.
+        - 기본값으로 클래스의 카멜케이스 이름을 언더스코어 네이밍으로 테이블 이름을 매칭합니다.
+    - ```@Id```
+        - 해당 테이블의 Primary Key 필드를 나타냅니다.
+    - ```@GeneratedValue```
+        - Primary Key의 생성 규칙을 나타냅니다.
+    - ```@Column```
+        - 테이블의 칼럼을 나타내며, 굳이 선언하지 않더라도 해당 클래스의 필드는 모두 칼럼이 됩니다.
+
+#### Gradle Dependency
+
+- ```compile('org.springframework.boot:spring-boot-starter-web')```
+- ```testCompile('org.springframework.boot:spring-boot-starter-test')```
+- ```compile('org.projectlombok:lombok')```
+    - Lombok을 사용하기 위한 의존성
+- ```compile('org.springframework.boot:spring-boot-starter-data-jpa')```
+    - 스프링 부트 용 Spirng Data Jpa 추상화 라이브러리
+- ```compile('com.h2database:h2')```
+    - h2 : 인메모리 관계형 데이터베이스
+    - 메모리에서 실행되기 때문에 애플리케이션을 재시작할 때마다 초기화되는 점을 이용하여 테스트 용도로 많이 사용됩니다.
