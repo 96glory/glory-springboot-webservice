@@ -58,7 +58,11 @@
         - ```save(Entity entity)```
             - insert / update 쿼리. id가 있다면 update, id가 없다면 update
         - ```findAll()```
-            - entity에 있는 모든 데이터를 조회해오는 메서드 
+            - entity에 있는 모든 데이터를 조회해오는 메서드
+    - 영속성 컨텍스트
+        - 엔티티를 영구 저장하는 환경
+        - JPA의 핵심 내용은 엔티티가 영속성 컨텍스트에 포함되어 있냐 아니냐로 갈립니다.
+        - JPA의 기본 설정으로 값으로 엔티티 매니저가 활성화된 상태가 됩니다. 트랜잭션 중 DB에서 데이터를 가져오면 이 데이터는 영속성 컨텍스트가 유지된 상태입니다. 이 상태에서 해당 데이터의 값을 변경하면 트랜잭션이 끝나는 시점에 해당 테이블에 변경분을 반영합니다. __즉, 엔티티의 값만 변경하면 별도로 업데이트 쿼리를 날릴 필요가 없다는 것입니다.__ (Dirty Checking)
 
 #### API를 만들기 위한 총 3개의 클래스
 
@@ -91,6 +95,10 @@
 - ```@RequestParam```
     - 외부에서 API로 넘긴 파라미터를 가져오는 애노테이션
     - [사용 예시](https://github.com/96glory/glory-springboot-webservice/blob/master/src/main/java/me/glory/springboot/web/HelloController.java)
+- ```@PathVariable```
+    - 쿼리 파라미터의 값을 함수 파라미터로 가져옵니다.
+- ```@EntityListeners(AuditingEntityListener.class)```
+    - 클래스에 Auditing 기능을 포함시킵니다.
 - Test
     - ```@WebMvcTest```
         - 여러 스프링 테스트 애노테이션 중, Web MVC에 집중할 수 있는 애노테이션
@@ -121,6 +129,9 @@
         - Primary Key의 생성 규칙을 나타냅니다.
     - ```@Column```
         - 테이블의 칼럼을 나타내며, 굳이 선언하지 않더라도 해당 클래스의 필드는 모두 칼럼이 됩니다.
+    - ```@MappedSuperClass```
+        - JPA Entity 클래스들이 ```@MappedSuperClass```가 선언된 클래스를 상속할 경우, ```@```가 선언된 클래스 내의 필드들도 Entity 클래스의 칼럼으로 인식하도록 합니다.
+        
 
 #### Gradle Dependency
 
