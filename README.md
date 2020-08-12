@@ -82,6 +82,29 @@
     - 도메인을 모두가 쉽게 이해할 수 있도록 단순화 시킨 것을 도메인 모델이라고 합니다.
     - __비즈니스 로직을 처리__
 
+#### 서버 템플릿 엔진과 머스태치
+
+- 템플릿 엔진
+    - 지정된 템플릿 양식과 데이터가 합쳐져 HTML 문서를 출력하는 소프트웨어
+    - 종류
+        - 서버 템플릿 엔진
+            - 서버에서 DB 혹은 API에서 가져온 데이터를 미리 정의된 템플릿에 넣고, HTML 문서로 그려서 클라이언트에 전달해주는 역할을 한다.
+            - JavaScript 코드가 실행되는 장소는 브라우저다.
+            - Thymeleaf, JSP, Freemarker, ... 
+        - 클라이언트 템플릿 엔진
+            - 서버는 JSON 혹은 XML 형식의 데이터만 브라우저에 전달하고, 브라우저에서 화면을 생성함.
+            - Mustache, React, Vue, ...
+- Mustache
+    - [자세한 정보](http://mustache.github.io/)
+    - intellij에서 mustache 플러그인 설치하고, ```compile('org.springframework.boot:spring-boot-starter-mustache')``` 의존성 추가하기
+    - 문법
+        - ```{{>layout/header}}```
+            - ```{{>}}```는 현재 머스테치 파일을 기준으로 다른 파일을 가져옵니다.
+        - ```{{#posts}}```
+            - posts라는 list를 순회합니다. java의 for 문과 비슷하다고 생각하면 됩니다.
+        - ```{{id}}```
+            - list에서 뽑아낸 객체의 필드를 사용합니다.
+
 #### Annotation
 
 - ```@SpringBootApplication```
@@ -144,3 +167,12 @@
 - ```compile('com.h2database:h2')```
     - h2 : 인메모리 관계형 데이터베이스
     - 메모리에서 실행되기 때문에 애플리케이션을 재시작할 때마다 초기화되는 점을 이용하여 테스트 용도로 많이 사용됩니다.
+- ```compile('org.springframework.boot:spring-boot-starter-mustache')```
+    - 머스테치를 편하게 사용할 수 있게 함.
+
+#### ETC
+
+- 생성 - create - POST
+- 읽기 - read - GET
+- 수정 - update - PUT
+- 삭제 - delete - DELETE
