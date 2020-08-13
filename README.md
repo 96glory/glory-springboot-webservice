@@ -105,6 +105,24 @@
         - ```{{id}}```
             - list에서 뽑아낸 객체의 필드를 사용합니다.
 
+#### Spring Security
+
+- Spring Security
+    - 막강한 인증과 인가 기능을 가진 프레임워크
+    - 스프링 애플리케이션에서는 보안을 위한 표준
+- 소셜 로그인 기능을 사용하지 않으면 구현해야 하는 것
+    - 로그인 시 보안
+    - 회원가입 시 이메일 혹은 전화번호 인증
+    - 비밀번호 찾기, 비밀번호 변경, 회원정보 변경
+    - 소셜 로그인으로 웹 애플리케이션을 개발하면 위 로그인 구현 사항을 구글, 네이버 등에 맡기면 되므로 서비스 개발에 집중할 수 있음.
+- 소셜 로그인
+    - [구글 소셜 로그인 추가](https://console.cloud.google.com/)
+    - 스프링 부트 2 버전 시큐리티에서는 기본적으로 ```{도메인}/login/oauth2/code/{소셜서비스코드}```로 리다이렉트 URL을 지원하고 있습니다.
+        - 개발자가 별도로 위 도메인을 위한 컨트롤러를 만들 필요는 없다.
+    - ```application-{소셜서비스코드}.properties```에 client ID, secret code, scope를 넣는다. ```{소셜서비스코드}```라는 이름의 profile이 생성되어 스프링 부트에서 이 profile을 접근할 수 있게 된다.
+        - github에 push할 때 개인정보가 올라가지 않도록 gitignore를 선언하자!
+    
+        
 #### Annotation
 
 - ```@SpringBootApplication```
@@ -169,7 +187,9 @@
     - 메모리에서 실행되기 때문에 애플리케이션을 재시작할 때마다 초기화되는 점을 이용하여 테스트 용도로 많이 사용됩니다.
 - ```compile('org.springframework.boot:spring-boot-starter-mustache')```
     - 머스테치를 편하게 사용할 수 있게 함.
-
+- ```compile('org.springframework.boot:spring-boot-starter-oauth2-client')```
+    - 소셜 로그인 등 클라이언트 입장에서 소셜 기능 구현 시 필요한 의존성
+    
 #### ETC
 
 - 생성 - create - POST
