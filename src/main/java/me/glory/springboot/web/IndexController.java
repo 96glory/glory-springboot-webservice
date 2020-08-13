@@ -1,6 +1,7 @@
 package me.glory.springboot.web;
 
 import lombok.RequiredArgsConstructor;
+import me.glory.springboot.config.auth.dto.SessionUser;
 import me.glory.springboot.service.posts.PostsService;
 import me.glory.springboot.web.dto.PostsListResponseDto;
 import me.glory.springboot.web.dto.PostsResponseDto;
@@ -17,11 +18,17 @@ import java.util.List;
 public class IndexController {
 
     private final PostsService postsService;
+    private final HttpSession httpSession;
 
     @GetMapping("/")
     public String index(Model model){
-//        List<PostsListResponseDto> list = postsService.findAllDesc();
         model.addAttribute("posts", postsService.findAllDesc());
+        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+
+        // 머스테치와 상호작용하기 위해서 사용
+        if (user != null) {
+           model.addAttribute("userName", user.getName());
+        }
         return "index";
     }
 
@@ -37,4 +44,5 @@ public class IndexController {
 
         return "posts-update";
     }
+
 }

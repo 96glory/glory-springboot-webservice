@@ -104,7 +104,14 @@
             - posts라는 list를 순회합니다. java의 for 문과 비슷하다고 생각하면 됩니다.
         - ```{{id}}```
             - list에서 뽑아낸 객체의 필드를 사용합니다.
-
+        -```{{#userName}}``` ~ ```{{/userName}}```
+            - 머스테치는 다른 언어와 같은 if문을 제공하지 않습니다. true/false 여부만 판단할 뿐입니다.
+            - 그러므로, 머스테치에서는 항상 최종값을 넘겨주어야 합니다.
+            - userName이 존재한다면, ```#``` 부터 ```/``` 안에 있는 HTML 코드를 사용자에게 보여줍니다.
+        - ```{{^userName}}``` ~ ```{{/userName}}```
+            - 머스테치에서 해당 값이 존재하지 않는 경우에는 ```^```를 사용합니다.
+            - - userName이 없다면, ```#``` 부터 ```/``` 안에 있는 HTML 코드를 사용자에게 보여줍니다.
+        
 #### Spring Security
 
 - Spring Security
@@ -172,7 +179,9 @@
         - 테이블의 칼럼을 나타내며, 굳이 선언하지 않더라도 해당 클래스의 필드는 모두 칼럼이 됩니다.
     - ```@MappedSuperClass```
         - JPA Entity 클래스들이 ```@MappedSuperClass```가 선언된 클래스를 상속할 경우, ```@```가 선언된 클래스 내의 필드들도 Entity 클래스의 칼럼으로 인식하도록 합니다.
-        
+- Security
+    - ```@EnableWebSecurity```
+        - Spring Security 설정들을 활성화시켜 줍니다.
 
 #### Gradle Dependency
 
