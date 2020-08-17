@@ -7,7 +7,10 @@
 - Spring & Spring Boot
 - Spring Web MVC
 - Spring JPA
+- Spring Security with Google OAuth2
 - Lombok
+- Mustache
+
 
 ### 요구사항
 
@@ -17,7 +20,7 @@
     - 게시글 수정
     - 게시글 삭제
 - 회원 기능
-    - 구글 / 네이버 소셜 로그인
+    - 구글 소셜 로그인
     - 로그인한 사용자 글 작성 권한
     - 본인 작성 글에 대한 권한 관리
 
@@ -41,7 +44,16 @@
     - ```.andExpect(jsonPath("$.name").isEqualTo("glory"))```
         - JSON 응답값을 필드별로 검증할 수 있는 메서드입니다.
         - $를 기준으로 필드명을 명시합니다.
-        
+- 기존 테스트에 시큐리티 적용으로 문제될 수 있음.
+    - 첫 번째 요인 : 구글 key를 작성한 ```application-oauth.properties```는 test로 넘어가지 못함
+        - sol : 가짜 설정값을 등록합니다.
+    - 두 번째 요인 : 302 Status Code
+        - 원인 : 스프링 시큐리티 설정 때문에 인증되지 않은 사용자의 요청은 이동시키기 때문입니다.
+        - sol : 임의로 인증된 사용자를 추가하여 API만 테스트해 볼 수 있게 한다.
+    - 세 번째 요인 : ```@WebMvcTest```에서 ```CustomOAuth2UserService```를 찾을 수 없음
+        - 원인 : ```@WebMvcTest```에서 ```CustomOAuth2UserService```를 스캔하지 않기 때문입니다.
+        - sol : 스캔 대상에서 ```SecurityConfig```를 제거합니다.
+
 #### JPA : 관계형 DB와 객체지향 프로그래밍 사이에서
 
 - 패러다임 불일치
@@ -153,9 +165,14 @@
         - 여러 스프링 테스트 애노테이션 중, Web MVC에 집중할 수 있는 애노테이션
         - ```@Controller```, ```@ControllerAdvice``` 등을 사용할 수 있지만, ```@Service```, ```@Component```, ```@Repository``` 등을 사용할 수 없습니다.
         - JPA test가 불가능하므로 ```@SpringBootTest```와 RestTemplate로 대체할 수 있다.
+    - ```@Before```
+        - 매번 테스트가 시작되기 전에 수행되는 행위를 지정
     - ```@After```
-        - Junit의 단위 테스트가 끝날 때마다 수행되는 세더르를 지정
+        - Junit의 단위 테스트가 끝날 때마다 수행되는 행위를 지정
         - 보통 배포 전 전체 테스트를 수행할 때 테스트 간 데이터 침범을 막기 위해 사용합니다.
+    - ```@WithMockUser(roles="USER")```
+        - 인증된 가짜 사용자를 만들어서 사용합니다.
+        - 이 어노테이션으로 인해 ROLE_USER 권한을 가진 사용자가 API를 요청하는 것과 동일한 효과를 가지게 됩니다.
 - Lombok
     - ```@Getter```
         - 선언된 모든 필드의 get 메소드를 생성해 줍니다.
