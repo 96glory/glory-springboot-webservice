@@ -128,7 +128,8 @@
         - 개발자가 별도로 위 도메인을 위한 컨트롤러를 만들 필요는 없다.
     - ```application-{소셜서비스코드}.properties```에 client ID, secret code, scope를 넣는다. ```{소셜서비스코드}```라는 이름의 profile이 생성되어 스프링 부트에서 이 profile을 접근할 수 있게 된다.
         - github에 push할 때 개인정보가 올라가지 않도록 gitignore를 선언하자!
-    
+    - ```HttpSecurity http```
+        - [코드의 주석 참고](https://github.com/96glory/glory-springboot-webservice/blob/558c1974a2/src/main/java/me/glory/springboot/config/auth/SecurityConfig.java)
         
 #### Annotation
 
@@ -179,9 +180,22 @@
         - 테이블의 칼럼을 나타내며, 굳이 선언하지 않더라도 해당 클래스의 필드는 모두 칼럼이 됩니다.
     - ```@MappedSuperClass```
         - JPA Entity 클래스들이 ```@MappedSuperClass```가 선언된 클래스를 상속할 경우, ```@```가 선언된 클래스 내의 필드들도 Entity 클래스의 칼럼으로 인식하도록 합니다.
+    - ```@Enumerated(EnumType.STRING)```
+        - JPA로 DB에 저장할 때 Enum 값을 어떤 형태로 저장할지를 결정합니다.
+        - 기본적으로 integer로 저장되나, Enum이 String일 경우 integer로 보면 무슨 뜻인지 모르기 때문에, String으로 바꿀 수 있습니다.
 - Security
     - ```@EnableWebSecurity```
         - Spring Security 설정들을 활성화시켜 줍니다.
+- make new Annotation
+    - ```@Target(ElementType.PARAMETER)```
+        - 이 어노테이션이 생성될 수 있는 위치를 지정합니다.
+        - PARAMETER로 지정하게 되면 메소드의 파라미터로 선언된 객체에서만 사용할 수 있습니다.
+    - ```@interface```
+        - 이 파일을 어노테이션 클래스로 지정합니다.
+    - ```@Retention(RetentionPolicy.RUNTIME)```
+        - 어떤 시점까지 어노테이션이 영향을 미치는지 결정합니다.
+        - RUNTIME으로 지정하게 되면 위 어노테이션은 RUNTIME까지 영향을 미치게 됩니다.
+
 
 #### Gradle Dependency
 

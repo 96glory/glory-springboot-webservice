@@ -1,6 +1,7 @@
 package me.glory.springboot.web;
 
 import lombok.RequiredArgsConstructor;
+import me.glory.springboot.config.auth.LoginUser;
 import me.glory.springboot.config.auth.dto.SessionUser;
 import me.glory.springboot.service.posts.PostsService;
 import me.glory.springboot.web.dto.PostsListResponseDto;
@@ -21,9 +22,11 @@ public class IndexController {
     private final HttpSession httpSession;
 
     @GetMapping("/")
-    public String index(Model model){
+    public String index(Model model, @LoginUser SessionUser user){
         model.addAttribute("posts", postsService.findAllDesc());
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+
+        // 어노테이션을 추가하여 세션값을 가져오는 부분을 생략할 수 있게 함.
+        // SessionUser user = (SessionUser) httpSession.getAttribute("user");
 
         // 머스테치와 상호작용하기 위해서 사용
         if (user != null) {
