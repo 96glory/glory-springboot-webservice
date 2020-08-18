@@ -11,6 +11,7 @@
 - Lombok
 - Mustache
 - AWS EC2
+- AWS RDS with MariaDB
 
 ### 요구사항
 
@@ -148,7 +149,7 @@
 - 24시간 작동하는 서버
     - 집에 PC를 24시간 구동시킨다.
     - 호스팅 서비스를 이용한다.
-    - 클라우드 서비스를 이용한다.
+    - 클라우드 서비스를 이용한다. <- AWS
 - AWS EC2
     - AWS에서 제공하는 성능, 용량 등을 유동적으로 사용할 수 있는 서버입니다.
     - 리전 확인 - 인스턴스 생성 - AMI 선택 - 인스턴스 유형 선택 - 인스턴스 세부 정보 구성 - 스토리지 추가 - 태그 추가 - pem 키 다운로드
@@ -158,22 +159,35 @@
         - Port : 22
         - Connection Type : SSH
         - Auth : ```.ppk``` file
-        - 필수로 해야할 일들
-            - Java 8 install
-                - ```sudo yum install -y java-1.8.0-openjdk-devel.x86_64```
-                - ```sudo /usr/sbin/alternatives --config java``` & java version을 1.8.0 으로 바꾸기
-                - ```sudo yum remove jre-1.7.0-openjdk```
-                - ```java -version```
-            - timezone 변경
-                - ```sudo rm /etc/localtime```
-                - ```sudo ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime```
-                - ```date```
-            - hostname 변경
-                - ```sudo vim /etc/sysconfig/network``` & HOSTNAME 부분을 내가 원하는 서비스명으로 바꾸기
-                - ```sudo reboot```
-                - ```sudo vim /etc/hosts``` & ```127.0.0.1 (내가 지정한 HOSTNAME)```을 추가한다.
-                - ```curl (내가 지정한 HOSTNAME)``` -> 잘 등록되었다면 80포트로 접근이 안된다는 에러가 발생한다.
-    
+    - 필수로 해야할 일들
+        - Java 8 install
+            - ```sudo yum install -y java-1.8.0-openjdk-devel.x86_64```
+            - ```sudo /usr/sbin/alternatives --config java``` & java version을 1.8.0 으로 바꾸기
+            - ```sudo yum remove jre-1.7.0-openjdk```
+            - ```java -version```
+        - timezone 변경
+            - ```sudo rm /etc/localtime```
+            - ```sudo ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime```
+            - ```date```
+        - hostname 변경
+            - ```sudo vim /etc/sysconfig/network``` & HOSTNAME 부분을 내가 원하는 서비스명으로 바꾸기
+            - ```sudo reboot```
+            - ```sudo vim /etc/hosts``` & ```127.0.0.1 (내가 지정한 HOSTNAME)```을 추가한다.
+            - ```curl (내가 지정한 HOSTNAME)``` -> 잘 등록되었다면 80포트로 접근이 안된다는 에러가 발생한다.
+- AWS RDS
+    - AWS에서 지원하는 클라우드 기반 관계형 데이터베이스
+    - RDS 인스턴스 생성
+        - MariaDB 사용 : 저렴한 가격, 서비스가 커질 때 Amazon Aurora로의 교체 용이성
+    - 필수로 해야할 일들
+        - 파라미터 그룹 탭 - 파라미터 그룹 생성 - 파라미터 그룹 편집(아래 세 가지) - 인스턴스의 DB 파라미터 그룹 교체 - DB 재부팅
+            - 타임존 설정 : ```time_zone = Asia/Seoul```
+            - Character Set : ```{character-set-client, character-set-connection, character-set-database, character-set-filesystem, character-set-results, character-set-server} = utf8mb4```, ```{collation_connection, collation_server} = utf8mb4_general_ci```
+            - Max Connection : ```max_connections = 60```
+    - IntelliJ의 database plugin을 통해 RDS에 접속할 수 있다.
+        - HostName : 인스턴스의 엔드포인트
+    - EC2에서 RDS에서 접근 확인
+        - EC2에 MySQL를 설치 : ```sudo yum install mysql```
+        - EC2에서 내 RDS로 접속 : ```mysql -u 계정 -p h Host주소```
     
 #### Annotation
 
