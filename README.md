@@ -10,7 +10,7 @@
 - Spring Security with Google OAuth2
 - Lombok
 - Mustache
-
+- AWS EC2
 
 ### 요구사항
 
@@ -142,7 +142,39 @@
         - github에 push할 때 개인정보가 올라가지 않도록 gitignore를 선언하자!
     - ```HttpSecurity http```
         - [코드의 주석 참고](https://github.com/96glory/glory-springboot-webservice/blob/558c1974a2/src/main/java/me/glory/springboot/config/auth/SecurityConfig.java)
-        
+
+#### AWS Cloud Service
+
+- 24시간 작동하는 서버
+    - 집에 PC를 24시간 구동시킨다.
+    - 호스팅 서비스를 이용한다.
+    - 클라우드 서비스를 이용한다.
+- AWS EC2
+    - AWS에서 제공하는 성능, 용량 등을 유동적으로 사용할 수 있는 서버입니다.
+    - 리전 확인 - 인스턴스 생성 - AMI 선택 - 인스턴스 유형 선택 - 인스턴스 세부 정보 구성 - 스토리지 추가 - 태그 추가 - pem 키 다운로드
+    - 인스턴스를 중단하고 다시 시작할 때도 새 IP가 할당되기 때문에, 귀찮은 일을 줄이기 위해 고정 IP인 Elastic IP를 사용하면 된다. (탄력적 IP, EIP) 인스턴스와 주소 연결 해주면 사용할 수 있다.
+    - putty나 xshell을 통해 내가 만든 인스턴스로 접속이 가능하다.
+        - HostName : ec2-user@EIP
+        - Port : 22
+        - Connection Type : SSH
+        - Auth : ```.ppk``` file
+        - 필수로 해야할 일들
+            - Java 8 install
+                - ```sudo yum install -y java-1.8.0-openjdk-devel.x86_64```
+                - ```sudo /usr/sbin/alternatives --config java``` & java version을 1.8.0 으로 바꾸기
+                - ```sudo yum remove jre-1.7.0-openjdk```
+                - ```java -version```
+            - timezone 변경
+                - ```sudo rm /etc/localtime```
+                - ```sudo ln -s /usr/share/zoneinfo/Asia/Seoul /etc/localtime```
+                - ```date```
+            - hostname 변경
+                - ```sudo vim /etc/sysconfig/network``` & HOSTNAME 부분을 내가 원하는 서비스명으로 바꾸기
+                - ```sudo reboot```
+                - ```sudo vim /etc/hosts``` & ```127.0.0.1 (내가 지정한 HOSTNAME)```을 추가한다.
+                - ```curl (내가 지정한 HOSTNAME)``` -> 잘 등록되었다면 80포트로 접근이 안된다는 에러가 발생한다.
+    
+    
 #### Annotation
 
 - ```@SpringBootApplication```
