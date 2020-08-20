@@ -174,6 +174,10 @@
             - ```sudo reboot```
             - ```sudo vim /etc/hosts``` & ```127.0.0.1 (내가 지정한 HOSTNAME)```을 추가한다.
             - ```curl (내가 지정한 HOSTNAME)``` -> 잘 등록되었다면 80포트로 접근이 안된다는 에러가 발생한다.
+    - EC2에 프로젝트 Clone 받기
+        - ```sudo yum install git``` & ```git --version```
+        - ```git clone 깃헙주소``` or ```git pull```
+        - ```chmod +x ./gredlew``` & ```./gradlew test``` : 프로젝트의 테스트 코드를 모두 수행한다.
 - AWS RDS
     - AWS에서 지원하는 클라우드 기반 관계형 데이터베이스
     - RDS 인스턴스 생성
@@ -188,7 +192,28 @@
     - EC2에서 RDS에서 접근 확인
         - EC2에 MySQL를 설치 : ```sudo yum install mysql```
         - EC2에서 내 RDS로 접속 : ```mysql -u 계정 -p h Host주소```
-    
+    - 스프링 부트 프로젝트로 RDS 접근하기
+        - 진행해야할 작업
+            - 테이블 생성 : H2는 테이블이 자동 생성되었지만, MariaDB에선 직접 쿼리를 이용해 생성해 주어야 합니다.
+                - JPA가 사용할 테이블은 테스트 코드 수행 시 로그로 생성되는 쿼리를 이용하면 됩니다.
+            - 프로젝트 설정 : 자바 프로젝트가 MariaDB에 접근하려면 DB driver가 필요합니다.
+                - ```build.gradle```에 ```compile("org.mariadb.jdbc:mariadb-java-client")``` 추가
+                - ```application-real.properties```를 생성하고, RDS 환경 profile를 추가한다.
+                    ```properties
+                    spring.profiles.include=oauth,real-db
+                    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+                    spring.session.store-type=jdbc
+                    ```
+            - EC2 설정  : EC2 서버 내부에서 RDS 접속 정보를 관리하도록 설정합니다.
+                - EC2 서버에 ```application-real-db.properties```를 생성하고, 아래 내용을 추가한 뒤 ```deploy.sh```에 real profile을 쓸 수 있도록 개선한다.
+                    ```properties
+                    spring.jpa.hibernate.ddl-auto=none
+                    spring.datasource.url=jdbc:mariadb://rds주소:포트명(기본은 3306)/데이터베이스이름
+                    spring.datasource.username=db계정
+                    spring.datasource.password=db계정비밀번호
+                    spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+                    ```
+
 #### Annotation
 
 - ```@SpringBootApplication```
